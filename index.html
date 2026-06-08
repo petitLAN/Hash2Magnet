@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hash → Magnet Converter</title>
+  <meta
+    name="description"
+    content="Static GitHub Pages torrent hash to magnet link converter with copy, external open, and torrent-cache download actions."
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <h1>Hash → Magnet</h1>
+      <p class="intro">
+        Paste a torrent info-hash and this static page immediately turns it into a magnet link.
+        The magnet text box is display-only; use the icon buttons to copy or open it externally.
+      </p>
+    </header>
+
+    <section class="input-section" aria-labelledby="hashInputLabel">
+      <label id="hashInputLabel" for="hashInput">Torrent hash</label>
+      <input
+        id="hashInput"
+        class="hash-input"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Example: 0123456789abcdef0123456789abcdef01234567"
+        autofocus
+      />
+      <p class="hint">
+        Supports common BitTorrent v1 hashes: 40-character hex, 32-character base32,
+        or an already existing <code>magnet:?</code> link.
+      </p>
+    </section>
+
+    <section class="result-card" aria-live="polite" aria-labelledby="resultTitle">
+      <div class="result-label">
+        <h2 id="resultTitle">Generated magnet link</h2>
+        <span id="hashType">Waiting for input</span>
+      </div>
+
+      <div class="result-row">
+        <div class="magnet-box" aria-label="Generated magnet link display">
+          <output id="magnetText" class="magnet-text">Paste a hash above…</output>
+
+          <div class="icon-actions" aria-label="Magnet link actions">
+            <button
+              id="copyButton"
+              class="icon-button"
+              type="button"
+              title="Copy magnet link"
+              aria-label="Copy magnet link"
+              disabled
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+                <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+              </svg>
+              <span class="sr-only">Copy magnet link</span>
+            </button>
+
+            <button
+              id="openButton"
+              class="icon-button icon-button--secondary"
+              type="button"
+              title="Open magnet link externally"
+              aria-label="Open magnet link externally"
+              disabled
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 3h7v7"></path>
+                <path d="M10 14 21 3"></path>
+                <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path>
+              </svg>
+              <span class="sr-only">Open magnet link externally</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="downloadButton" class="button button--secondary" type="button" disabled>
+          Download .torrent
+        </button>
+      </div>
+
+      <p id="status" class="status" role="status"></p>
+    </section>
+
+    <details class="details-card">
+      <summary>About the .torrent download button</summary>
+      <p>
+        A magnet link can be made from just the hash because it only needs an
+        <code>xt=urn:btih:</code> value. A real <code>.torrent</code> file contains
+        extra metadata, so it cannot be created from only the hash in a fully offline/static page.
+        This button therefore opens a public torrent-cache URL for 40-character v1 hashes.
+        If the cache does not know the hash, there is no file to download.
+      </p>
+    </details>
+  </main>
+</body>
+</html>
